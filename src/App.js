@@ -6,7 +6,9 @@ import {
   deleteUser,
   updateName,
   updateUserName,
+  updateEmail,
 } from './features/Users';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   const dispatch = useDispatch();
@@ -14,8 +16,10 @@ function App() {
 
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [newName, setNewName] = useState('');
   const [newUserName, setNewUserName] = useState('');
+  const [newEmail, setNewEmail] = useState('');
 
   return (
     <div className='App'>
@@ -34,13 +38,24 @@ function App() {
             setUsername(e.target.value);
           }}
         />
+        <input
+          type='email'
+          placeholder='email'
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <button
           onClick={() => {
+            setNewName(null);
+            setNewUserName(null);
+            setNewEmail(null);
+
             dispatch(
               addUser({
-                id: userList[userList.length - 1].id + 1,
+                // id: userList[userList.length - 1].id + 1,
+                id: uuidv4(),
                 name,
                 username,
+                email,
               })
             );
           }}
@@ -55,6 +70,7 @@ function App() {
             <div>
               <h1>{user.name}</h1>
               <h1>{user.username}</h1>
+              <h1>{user.email}</h1>
               <input
                 type='text'
                 placeholder='Name'
@@ -83,6 +99,10 @@ function App() {
               >
                 Update Username
               </button>
+              <input type="email" placeholder='email'onChange={(e) => setNewEmail(e.target.value)}/>
+              <button onClick={() => {
+                dispatch(updateEmail({id: user.id, email: newEmail}))
+              }}>Update Email</button>
               <button
                 onClick={() => {
                   dispatch(deleteUser({ id: user.id }));
